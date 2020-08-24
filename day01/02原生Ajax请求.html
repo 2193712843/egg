@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button>开启ajax请求</button>
+    <script>
+        function getAjax(method,url){
+            return new Promise((resolve,reject)=>{
+                let xhr=new XMLHttpRequest()
+                xhr.open(method,url)
+                xhr.onreadystatechange=function(){
+                    if(xhr.readyState==4){
+                        if(xhr.status==200){
+                            let obj=JSON.parse(xhr.responseText)
+                            resolve(obj)
+                        }else{
+                            reject("出错")
+                        }
+                    }
+                }
+                xhr.send();
+            })
+        }
+        window.onload=function(){
+            document.querySelector("button").onclick=function(){
+                let promise=getAjax("post","http://localhost:8080")
+                promise.then(data=>{
+                    let h1=document.createElement("h1")
+                    h1.innerHTML=data.name+"-----"+data.age+"----"+data.sex
+                    document.body.appendChild(h1)
+                })
+            }
+        }
+    </script>
+</body>
+</html>
